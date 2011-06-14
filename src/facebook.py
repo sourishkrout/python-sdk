@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #
 # Copyright 2010 Facebook
 #
@@ -167,7 +166,12 @@ class GraphAPI(object):
                 post_args["access_token"] = self.access_token
             else:
                 args["access_token"] = self.access_token
-        post_data = None if post_args is None else urllib.urlencode(post_args)
+        
+		if post_args is None:
+			post_data = None
+		else:
+			urllib.urlencode(post_args)		
+		
         file = urllib.urlopen("https://graph.facebook.com/" + path + "?" +
                               urllib.urlencode(args), post_data)
         try:

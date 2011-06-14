@@ -34,9 +34,15 @@ usage of this module might look like this:
 """
 
 import cgi
-import hashlib
 import time
 import urllib
+
+# Python 2.4 doesn't come with hashlib. Check for legacy module.
+try:
+	from hashlib import md5
+except ImportError, e:
+	from md5 import md5
+	
 
 # Find a JSON parser
 try:
@@ -211,7 +217,7 @@ def get_user_from_cookie(cookies, app_id, app_secret):
     args = dict((k, v[-1]) for k, v in cgi.parse_qs(cookie.strip('"')).items())
     payload = "".join(k + "=" + args[k] for k in sorted(args.keys())
                       if k != "sig")
-    sig = hashlib.md5(payload + app_secret).hexdigest()
+    sig = md5(payload + app_secret).hexdigest()
     expires = int(args["expires"])
     if sig == args.get("sig") and (expires == 0 or time.time() < expires):
         return args
